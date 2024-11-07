@@ -4,24 +4,35 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 
+interface HistoryEntry {
+  prompt: string;
+  response: string;
+  timestamp: string;
+}
+
 const Prompt = () => {
   const [prompt, setPrompt] = useState('');
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
-    // Simulate GPT response
-    const newEntry = {
-      prompt,
-      response: "Analyzing your request... Here's what I found in the selected area...",
-      timestamp: new Date().toISOString(),
-    };
+    try {
+      // Simula uma resposta do GPT
+      const newEntry: HistoryEntry = {
+        prompt: prompt.trim(),
+        response: "Analyzing your request... Here's what I found in the selected area...",
+        timestamp: new Date().toISOString(),
+      };
 
-    setHistory([newEntry, ...history]);
-    setPrompt('');
-    toast.success('Analysis completed!');
+      setHistory(prev => [newEntry, ...prev]);
+      setPrompt('');
+      toast.success('Analysis completed!');
+    } catch (error) {
+      toast.error('Failed to process request');
+      console.error('Error processing request:', error);
+    }
   };
 
   return (
@@ -46,10 +57,10 @@ const Prompt = () => {
         />
         <div className="flex justify-between">
           <div className="flex gap-2">
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" type="button">
               <Save className="h-4 w-4" />
             </Button>
-            <Button variant="outline" size="icon">
+            <Button variant="outline" size="icon" type="button">
               <Bookmark className="h-4 w-4" />
             </Button>
           </div>
