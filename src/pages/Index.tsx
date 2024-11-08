@@ -17,9 +17,9 @@ const Index = () => {
         </div>
       </main>
       
-      <footer className="bg-white border-t border-gray-200 py-4">
-        <div className="container mx-auto text-center text-sm text-gray-600">
-          <p>Desenvolvido pela RunForrestGIS</p>
+      <footer className="bg-white border-t border-gray-200 py-3">
+        <div className="container mx-auto text-center">
+          <p className="text-xs text-gray-500">Desenvolvido pela RunForrestGIS</p>
         </div>
       </footer>
     </div>

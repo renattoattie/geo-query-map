@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { Send, Save, Bookmark } from 'lucide-react';
+import { Send, Save, Star, Loader, HelpCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface HistoryEntry {
   prompt: string;
@@ -13,12 +18,14 @@ interface HistoryEntry {
 const Prompt = () => {
   const [prompt, setPrompt] = useState('');
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!prompt.trim()) return;
 
     try {
+      setIsProcessing(true);
       // Simula uma resposta do GPT
       const newEntry: HistoryEntry = {
         prompt: prompt.trim(),
@@ -32,7 +39,16 @@ const Prompt = () => {
     } catch (error) {
       toast.error('Failed to process request');
       console.error('Error processing request:', error);
+    } finally {
+      setIsProcessing(false);
     }
+  };
+
+  const showHelp = () => {
+    toast.info(
+      "Como usar: Digite sua pergunta sobre a área do mapa selecionada e clique em Enviar. Use os botões para salvar ou favoritar análises importantes.",
+      { duration: 5000 }
+    );
   };
 
   return (
@@ -55,18 +71,43 @@ const Prompt = () => {
           placeholder="Ask about GIS data or request analysis..."
           className="min-h-[100px]"
         />
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <div className="flex gap-2">
-            <Button variant="outline" size="icon" type="button">
-              <Save className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" type="button">
-              <Bookmark className="h-4 w-4" />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="icon" type="button">
+                  <Save className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Salvar prompt</TooltipContent>
+            </Tooltip>
+            
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="outline" size="icon" type="button">
+                  <Star className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Adicionar aos favoritos</TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" onClick={showHelp}>
+                  <HelpCircle className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Ajuda</TooltipContent>
+            </Tooltip>
           </div>
-          <Button type="submit">
-            <Send className="h-4 w-4 mr-2" />
-            Send
+          
+          <Button type="submit" disabled={isProcessing}>
+            {isProcessing ? (
+              <Loader className="h-4 w-4 mr-2 animate-spin" />
+            ) : (
+              <Send className="h-4 w-4 mr-2" />
+            )}
+            {isProcessing ? "Processando..." : "Enviar"}
           </Button>
         </div>
       </form>
