@@ -40,6 +40,19 @@
   }
 }
 
-.mapboxgl-map {
+.ol-map {
   @apply w-full h-full rounded-lg;
+}
+
+.ol-control {
+  @apply bg-white bg-opacity-80 rounded-lg shadow-md;
+  padding: 0.5rem;
+}
+
+.ol-zoom {
+  @apply top-4 left-4;
+}
+
+.ol-zoom button {
+  @apply bg-white text-gray-700 hover:bg-gray-100 w-8 h-8 rounded-md border border-gray-200;
 }

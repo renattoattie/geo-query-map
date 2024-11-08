@@ -1,25 +1,36 @@
 import { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
+import Map from 'ol/Map';
+import View from 'ol/View';
+import TileLayer from 'ol/layer/Tile';
+import OSM from 'ol/source/OSM';
+import 'ol/ol.css';
 
-const Map = () => {
+const MapComponent = () => {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
   useEffect(() => {
     if (map.current) return;
 
-    mapboxgl.accessToken = 'YOUR_MAPBOX_TOKEN';
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v11',
-      center: [-74.5, 40],
-      zoom: 9
+    map.current = new Map({
+      target: mapContainer.current,
+      layers: [
+        new TileLayer({
+          source: new OSM()
+        })
+      ],
+      view: new View({
+        center: [-8288043.591739182, 4969814.9146726515], // Coordenadas aproximadas para o centro dos EUA
+        zoom: 4
+      })
     });
 
-    map.current.addControl(new mapboxgl.NavigationControl(), 'top-right');
-    
-    return () => map.current?.remove();
+    return () => {
+      if (map.current) {
+        map.current.setTarget(undefined);
+        map.current = null;
+      }
+    };
   }, []);
 
   return (
@@ -29,4 +40,4 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default MapComponent;
