@@ -7,13 +7,15 @@ const Index = () => {
     <div className="flex flex-col h-screen">
       <Header />
       
-      <main className="flex-1 container mx-auto p-4 flex gap-4">
-        <div className="w-1/3 min-w-[400px]">
-          <Prompt />
-        </div>
-        
-        <div className="flex-1">
-          <Map />
+      <main className="flex-1 container mx-auto p-4">
+        <div className="flex flex-col lg:flex-row gap-4 h-full">
+          <div className="w-full lg:w-1/3 lg:min-w-[400px] h-[400px] lg:h-auto">
+            <Prompt />
+          </div>
+          
+          <div className="flex-1 h-[400px] lg:h-auto">
+            <Map />
+          </div>
         </div>
       </main>
       
